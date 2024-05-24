@@ -10,19 +10,19 @@ import {
 import { BaseRecord, useMany } from "@refinedev/core";
 import { Space, Table } from "antd";
 
-export const BlogPostList = () => {
+export const PropertyList = () => {
   const { tableProps } = useTable({
     syncWithLocation: true,
     meta: {
-      select: "*, categories(id,title)",
+      select: "*, properties(id,title)",
     },
   });
 
-  const { data: categoryData, isLoading: categoryIsLoading } = useMany({
-    resource: "categories",
+  const { data: propertyData, isLoading: propertyIsLoading } = useMany({
+    resource: "properties",
     ids:
       tableProps?.dataSource
-        ?.map((item) => item?.categories?.id)
+        ?.map((item) => item?.properties?.id)
         .filter(Boolean) ?? [],
     queryOptions: {
       enabled: !!tableProps?.dataSource,
@@ -33,27 +33,20 @@ export const BlogPostList = () => {
     <List>
       <Table {...tableProps} rowKey="id">
         <Table.Column dataIndex="id" title={"ID"} />
-        <Table.Column dataIndex="title" title={"Title"} />
         <Table.Column
-          dataIndex="content"
-          title={"Content"}
-          render={(value: any) => {
-            if (!value) return "-";
-            return <MarkdownField value={value.slice(0, 80) + "..."} />;
-          }}
-        />
-        <Table.Column
-          dataIndex={"categories"}
-          title={"Category"}
+          dataIndex={"properties"}
+          title={"Property"}
           render={(value) =>
-            categoryIsLoading ? (
+            propertyIsLoading ? (
               <>Loading...</>
             ) : (
-              categoryData?.data?.find((item) => item.id === value?.id)?.title
+              propertyData?.data?.find((item) => item.id === value?.id)?.title
             )
           }
         />
-        <Table.Column dataIndex="status" title={"Status"} />
+        <Table.Column dataIndex="address" title={"Address"} />
+        <Table.Column dataIndex="city" title={"City"} />
+        <Table.Column dataIndex="state" title={"State"} />
         <Table.Column
           dataIndex={["createdAt"]}
           title={"Created at"}

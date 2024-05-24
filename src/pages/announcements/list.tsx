@@ -1,12 +1,12 @@
 import { useSimpleList } from "@refinedev/antd";
-import { List, Skeleton } from "antd";
-
-import { CanvasTile } from "../../components/canvas";
+import { List, Skeleton, Typography } from "antd";
 import { Announcement } from "../../types";
+
+const { Text } = Typography;
 
 export const AnnouncementList: React.FC = () => {
   const { listProps, queryResult } = useSimpleList<Announcement>({
-    resource: "canvases",
+    resource: "announcements",
     pagination: {
       pageSize: 12,
     },
@@ -22,8 +22,19 @@ export const AnnouncementList: React.FC = () => {
 
   const { isLoading } = queryResult;
 
+  const renderItem = (item: Announcement) => {
+    const { id, title, message, created_at } = item;
+  
+    return (
+      <List.Item actions={[<Text key={id}>{created_at}</Text>]}>
+        <List.Item.Meta title={title} description={message} />
+      </List.Item>
+    );
+  };
+
   return (
     <div className="container">
+      <Text><h1>Announcements</h1></Text> 
       <div className="paper">
         {isLoading ? (
           <div className="canvas-skeleton-list">
@@ -34,12 +45,15 @@ export const AnnouncementList: React.FC = () => {
         ) : (
           <List
             {...listProps}
-            className="canvas-list"
-            split={false}
-            renderItem={(canvas) => <CanvasTile canvas={canvas} />}
+            renderItem={renderItem}
+            bordered
+            pagination={{      position: 'top',
+            align: 'center',}}
+
           />
         )}
       </div>
     </div>
   );
+
 };

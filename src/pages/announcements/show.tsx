@@ -1,10 +1,6 @@
 import { useSimpleList } from "@refinedev/antd";
 import { List, Skeleton } from "antd";
 
-import { CanvasTile } from "../../components/canvas";
-import { SponsorsBanner } from "../../components/banners";
-import { Canvas } from "../../types";
-
 export const CanvasList: React.FC = () => {
   const { listProps, queryResult } = useSimpleList<Canvas>({
     resource: "canvases",
@@ -41,7 +37,7 @@ export const CanvasList: React.FC = () => {
           />
         )}
       </div>
-      <SponsorsBanner />
+
     </div>
   );
 };

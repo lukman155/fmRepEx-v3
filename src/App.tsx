@@ -24,17 +24,15 @@ import authProvider from "./authProvider";
 import { Header } from "./components/header";
 import { ColorModeContextProvider } from "./contexts/color-mode";
 import {
-  BlogPostCreate,
-  BlogPostEdit,
-  BlogPostList,
-  BlogPostShow,
-} from "./pages/blog-posts";
+  PropertyCreate,
+  PropertyList,
+
+} from "./pages/properties";
 import {
-  CategoryCreate,
-  CategoryEdit,
+  
   AnnouncementList,
-  CategoryShow,
-} from "./pages";
+
+} from "./pages/announcements";
 import { supabaseClient } from "./utility";
 
 function App() {
@@ -53,11 +51,11 @@ function App() {
                 notificationProvider={useNotificationProvider}
                 resources={[
                   {
-                    name: "blog_posts",
-                    list: "/blog-posts",
-                    create: "/blog-posts/create",
-                    edit: "/blog-posts/edit/:id",
-                    show: "/blog-posts/show/:id",
+                    name: "properties",
+                    list: "/properties",
+                    create: "/properties/create",
+                    edit: "/properties/edit/:id",
+                    show: "/properties/show/:id",
                     meta: {
                       canDelete: true,
                     },
@@ -98,19 +96,19 @@ function App() {
                   >
                     <Route
                       index
-                      element={<NavigateToResource resource="blog_posts" />}
+                      element={<NavigateToResource resource="properties" />}
                     />
-                    <Route path="/blog-posts">
-                      <Route index element={<BlogPostList />} />
-                      <Route path="create" element={<BlogPostCreate />} />
-                      <Route path="edit/:id" element={<BlogPostEdit />} />
-                      <Route path="show/:id" element={<BlogPostShow />} />
+                    <Route path="/properties">
+                      <Route index element={<PropertyList />} />
+                      <Route path="create" element={<PropertyCreate />} />
+                     {/* <Route path="edit/:id" element={<BlogPostEdit />} />
+                      <Route path="show/:id" element={<BlogPostShow />} /> */}
                     </Route>
-                    <Route path="/categories">
+                    <Route path="/announcements">
                       <Route index element={<AnnouncementList />} />
-                      <Route path="create" element={<CategoryCreate />} />
-                      <Route path="edit/:id" element={<CategoryEdit />} />
-                      <Route path="show/:id" element={<CategoryShow />} />
+                      <Route path="create" element={<PropertyCreate />} />
+                      {/* <Route path="edit/:id" element={<CategoryEdit />} />
+                      <Route path="show/:id" element={<CategoryShow />} /> */}
                     </Route>
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>

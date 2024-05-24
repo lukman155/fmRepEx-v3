@@ -2,11 +2,11 @@ import { Create, useForm, useSelect } from "@refinedev/antd";
 import MDEditor from "@uiw/react-md-editor";
 import { Form, Input, Select } from "antd";
 
-export const BlogPostCreate = () => {
+export const PropertyCreate = () => {
   const { formProps, saveButtonProps } = useForm({});
 
-  const { selectProps: categorySelectProps } = useSelect({
-    resource: "categories",
+  const { selectProps: propertySelectProps } = useSelect({
+    resource: "properties",
   });
 
   return (
@@ -35,15 +35,15 @@ export const BlogPostCreate = () => {
           <MDEditor data-color-mode="light" />
         </Form.Item>
         <Form.Item
-          label={"Category"}
-          name={"categoryId"}
+          label={"Property"}
+          name={"propertyId"}
           rules={[
             {
               required: true,
             },
           ]}
         >
-          <Select {...categorySelectProps} />
+          <Select {...propertySelectProps} />
         </Form.Item>
         <Form.Item
           label={"Status"}
@@ -55,15 +55,6 @@ export const BlogPostCreate = () => {
             },
           ]}
         >
-          <Select
-            defaultValue={"draft"}
-            options={[
-              { value: "draft", label: "Draft" },
-              { value: "published", label: "Published" },
-              { value: "rejected", label: "Rejected" },
-            ]}
-            style={{ width: 120 }}
-          />
         </Form.Item>
       </Form>
     </Create>
