@@ -3,12 +3,13 @@ import {
   DeleteButton,
   EditButton,
   List,
-  MarkdownField,
   ShowButton,
   useTable,
 } from "@refinedev/antd";
 import { BaseRecord, useMany } from "@refinedev/core";
-import { Space, Table } from "antd";
+import { Space, Table, Typography } from "antd";
+
+const { Title, Text } = Typography;
 
 export const PropertyList = () => {
   const { tableProps } = useTable({

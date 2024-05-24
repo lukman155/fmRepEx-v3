@@ -1,8 +1,12 @@
-import { useSimpleList } from "@refinedev/antd";
+import { useSimpleList, useModal } from "@refinedev/antd";
 import { List, Skeleton, Typography } from "antd";
 import { Announcement } from "../../types";
+import { Modal, Button } from "antd";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
-const { Text } = Typography;
+
+const { Title, Text } = Typography;
 
 export const AnnouncementList: React.FC = () => {
   const { listProps, queryResult } = useSimpleList<Announcement>({
@@ -19,22 +23,36 @@ export const AnnouncementList: React.FC = () => {
       ],
     },
   });
+  const { show, modalProps } = useModal();
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+
 
   const { isLoading } = queryResult;
 
   const renderItem = (item: Announcement) => {
     const { id, title, message, created_at } = item;
-  
+    const isHovered = hoveredItem === id; // Check if current item is hovered
+
+
     return (
-      <List.Item actions={[<Text key={id}>{created_at}</Text>]}>
-        <List.Item.Meta title={title} description={message} />
-      </List.Item>
+      <div style={{cursor:'pointer', backgroundColor: isHovered ? '#eee' : '',}} 
+      onMouseEnter={() => setHoveredItem(id)} 
+      onMouseLeave={() => setHoveredItem(null)}>
+        <List.Item onClick={show} actions={[<Text key={id}>{created_at}</Text>]}>
+          <List.Item.Meta title={title} description={message} />
+        </List.Item>
+        <Modal title="Basic Modal" {...modalProps}>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+        </Modal>
+      </div>
     );
   };
 
   return (
     <div className="container">
-      <Text><h1>Announcements</h1></Text> 
+      <Title>Announcements</Title> 
       <div className="paper">
         {isLoading ? (
           <div className="canvas-skeleton-list">

@@ -1,43 +1,40 @@
-import { useSimpleList } from "@refinedev/antd";
-import { List, Skeleton } from "antd";
+import { useParsed } from '@refinedev/core';
+import { Badge, Descriptions } from 'antd';
+import type { DescriptionsProps } from 'antd';
 
-export const CanvasList: React.FC = () => {
-  const { listProps, queryResult } = useSimpleList<Canvas>({
-    resource: "canvases",
-    pagination: {
-      pageSize: 12,
+// import { Announcement } from "../../types";
+
+export const AnnouncementShow: React.FC = () => {
+  const { pathname } = useParsed();
+  const items: DescriptionsProps['items'] = [
+    {
+      key: '1',
+      label: 'UserName',
+      children: 'Zhou Maomao',
     },
-    sorters: {
-      initial: [
-        {
-          field: "created_at",
-          order: "desc",
-        },
-      ],
+    {
+      key: '2',
+      label: 'Telephone',
+      children: '1810000000',
     },
-  });
-
-  const { isLoading } = queryResult;
-
-  return (
-    <div className="container">
-      <div className="paper">
-        {isLoading ? (
-          <div className="canvas-skeleton-list">
-            {[...Array(12)].map((_, index) => (
-              <Skeleton key={index} paragraph={{ rows: 8 }} />
-            ))}
-          </div>
-        ) : (
-          <List
-            {...listProps}
-            className="canvas-list"
-            split={false}
-            renderItem={(canvas) => <CanvasTile canvas={canvas} />}
-          />
-        )}
-      </div>
-
-    </div>
-  );
-};
+    {
+      key: '3',
+      label: 'Live',
+      children: 'Hangzhou, Zhejiang',
+    },
+    {
+      key: '4',
+      label: 'Address',
+      span: 2,
+      children: 'No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China',
+    },
+    {
+      key: '5',
+      label: 'Remark',
+      children: 'empty',
+    },
+  ];
+  
+  return ( <Descriptions title="" layout="vertical" items={items} />)
+}
+  

@@ -29,8 +29,10 @@ import {
 
 } from "./pages/properties";
 import {
-  
+  AnnouncementCreate,
+  AnnouncementEdit,
   AnnouncementList,
+  AnnouncementShow,
 
 } from "./pages/announcements";
 import { supabaseClient } from "./utility";
@@ -101,14 +103,14 @@ function App() {
                     <Route path="/properties">
                       <Route index element={<PropertyList />} />
                       <Route path="create" element={<PropertyCreate />} />
-                     {/* <Route path="edit/:id" element={<BlogPostEdit />} />
+                    {/* <Route path="edit/:id" element={<BlogPostEdit />} />
                       <Route path="show/:id" element={<BlogPostShow />} /> */}
                     </Route>
                     <Route path="/announcements">
                       <Route index element={<AnnouncementList />} />
-                      <Route path="create" element={<PropertyCreate />} />
-                      {/* <Route path="edit/:id" element={<CategoryEdit />} />
-                      <Route path="show/:id" element={<CategoryShow />} /> */}
+                      <Route path="create" element={<AnnouncementCreate />} />
+                      <Route path="edit/:id" element={<AnnouncementEdit />} />
+                      <Route path="show/:id" element={<AnnouncementShow />} /> 
                     </Route>
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>
