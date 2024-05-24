@@ -32,9 +32,9 @@ import {
 import {
   CategoryCreate,
   CategoryEdit,
-  CategoryList,
+  AnnouncementList,
   CategoryShow,
-} from "./pages/categories";
+} from "./pages";
 import { supabaseClient } from "./utility";
 
 function App() {
@@ -63,11 +63,11 @@ function App() {
                     },
                   },
                   {
-                    name: "categories",
-                    list: "/categories",
-                    create: "/categories/create",
-                    edit: "/categories/edit/:id",
-                    show: "/categories/show/:id",
+                    name: "announcements",
+                    list: "/announcements",
+                    create: "/announcements/create",
+                    edit: "/announcements/edit/:id",
+                    show: "/announcements/show/:id",
                     meta: {
                       canDelete: true,
                     },
@@ -107,7 +107,7 @@ function App() {
                       <Route path="show/:id" element={<BlogPostShow />} />
                     </Route>
                     <Route path="/categories">
-                      <Route index element={<CategoryList />} />
+                      <Route index element={<AnnouncementList />} />
                       <Route path="create" element={<CategoryCreate />} />
                       <Route path="edit/:id" element={<CategoryEdit />} />
                       <Route path="show/:id" element={<CategoryShow />} />
