@@ -1,77 +1,222 @@
-import { useSimpleList, useModal } from "@refinedev/antd";
-import { List, Skeleton, Typography } from "antd";
+import React, { useState } from "react";
+import { useShow } from "@refinedev/core";
+
+import {
+  List,
+  Create,
+  Edit,
+  Show,
+  EditButton,
+  ShowButton,
+  DeleteButton,
+  useTable,
+  useDrawerForm,
+  DateField,
+} from "@refinedev/antd";
+
+import { Table, Form, Select, Input, Drawer, Space, Typography } from "antd";
+
 import { Announcement } from "../../types";
-import { Modal, Button } from "antd";
-import { useState } from "react";
-import { Link } from "react-router-dom";
 
 
 const { Title, Text } = Typography;
 
-export const AnnouncementList: React.FC = () => {
-  const { listProps, queryResult } = useSimpleList<Announcement>({
-    resource: "announcements",
-    pagination: {
-      pageSize: 12,
-    },
-    sorters: {
-      initial: [
-        {
-          field: "created_at",
-          order: "desc",
-        },
-      ],
-    },
+export const AnnouncementList = () => {
+  const { tableProps } = useTable<Announcement>();
+
+  // Create Drawer
+  const {
+    formProps: createFormProps,
+    drawerProps: createDrawerProps,
+    show: createDrawerShow,
+    saveButtonProps: createSaveButtonProps,
+  } = useDrawerForm<Announcement>({
+    action: "create",
+    syncWithLocation: true,
   });
-  const { show, modalProps } = useModal();
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
+  // Edit Drawer
+  const {
+    formProps: editFormProps,
+    drawerProps: editDrawerProps,
+    show: editDrawerShow,
+    saveButtonProps: editSaveButtonProps,
+    deleteButtonProps,
+    id,
+    formLoading: editFormLoading,
+  } = useDrawerForm<Announcement>({
+    action: "edit",
+    syncWithLocation: true,
+  });
 
-  const { isLoading } = queryResult;
+  // Show Drawer
+  const [visibleShowDrawer, setVisibleShowDrawer] = useState<boolean>(false);
+  const { queryResult, showId, setShowId } = useShow<Announcement>();
 
-  const renderItem = (item: Announcement) => {
-    const { id, title, message, created_at } = item;
-    const isHovered = hoveredItem === id; // Check if current item is hovered
-
-
-    return (
-      <div style={{cursor:'pointer', backgroundColor: isHovered ? '#eee' : '',}} 
-      onMouseEnter={() => setHoveredItem(id)} 
-      onMouseLeave={() => setHoveredItem(null)}>
-        <List.Item onClick={show} actions={[<Text key={id}>{created_at}</Text>]}>
-          <List.Item.Meta title={title} description={message} />
-        </List.Item>
-        <Modal title="Basic Modal" {...modalProps}>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-          <p>Some contents...</p>
-        </Modal>
-      </div>
-    );
-  };
+  const { data: showQueryResult, isLoading: showIsLoading } = queryResult;
+  const record = showQueryResult?.data;
 
   return (
-    <div className="container">
-      <Title>Announcements</Title> 
-      <div className="paper">
-        {isLoading ? (
-          <div className="canvas-skeleton-list">
-            {[...Array(12)].map((_, index) => (
-              <Skeleton key={index} paragraph={{ rows: 8 }} />
-            ))}
-          </div>
-        ) : (
-          <List
-            {...listProps}
-            renderItem={renderItem}
-            bordered
-            pagination={{      position: 'top',
-            align: 'center',}}
-
+    <>
+      <List
+        canCreate
+        createButtonProps={{
+          onClick: () => {
+            createDrawerShow();
+          },
+        }}
+      >
+        <Table {...tableProps} rowKey="id">
+          <Table.Column dataIndex="created_at" title="Date Posted"  />
+          <Table.Column dataIndex="title" title="Title" />
+          <Table.Column dataIndex="description" title="Description" />
+          <Table.Column<Announcement>
+            title="Actions"
+            dataIndex="actions"
+            key="actions"
+            render={(_, record) => (
+              <Space>
+                <EditButton
+                  hideText
+                  size="small"
+                  recordItemId={record.id}
+                  onClick={() => editDrawerShow(record.id)}
+                />
+                <ShowButton
+                  hideText
+                  size="small"
+                  recordItemId={record.id}
+                  onClick={() => {
+                    setShowId(record.id);
+                    setVisibleShowDrawer(true);
+                  }}
+                />
+              </Space>
+            )}
           />
-        )}
-      </div>
-    </div>
-  );
+        </Table>
+      </List>
+      <Drawer {...createDrawerProps}>
+        <Create
+          saveButtonProps={createSaveButtonProps}
+          goBack={false}
+          contentProps={{
+            style: {
+              boxShadow: "none",
+            },
+            bodyStyle: {
+              padding: 0,
+            },
+          }}
+        >
+          <Form {...createFormProps} layout="vertical">
+            <Form.Item
+              label="Title"
+              name="title"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
 
+            <Form.Item
+              label="Message"
+              name="message"
+              rules={[
+                {
+                  required: false,
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+
+          </Form>
+        </Create>
+      </Drawer>
+      <Drawer {...editDrawerProps}>
+        <Edit
+          recordItemId={id}
+          saveButtonProps={editSaveButtonProps}
+          isLoading={editFormLoading}
+          deleteButtonProps={deleteButtonProps}
+          contentProps={{
+            style: {
+              boxShadow: "none",
+            },
+            bodyStyle: {
+              padding: 0,
+            },
+          }}
+        >
+          <Form {...editFormProps} layout="vertical">
+            <Form.Item
+              label="Title"
+              name="title"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              label="Status"
+              name="status"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
+            >
+              <Select
+                options={[
+                  {
+                    label: "Published",
+                    value: "published",
+                  },
+                  {
+                    label: "Draft",
+                    value: "draft",
+                  },
+                  {
+                    label: "Rejected",
+                    value: "rejected",
+                  },
+                ]}
+              />
+            </Form.Item>
+          </Form>
+        </Edit>
+      </Drawer>
+      <Drawer
+        open={visibleShowDrawer}
+        onClose={() => setVisibleShowDrawer(false)}
+        width="500"
+      >
+        <Show
+          isLoading={showIsLoading}
+          headerButtons={
+            <DeleteButton
+              recordItemId={showId}
+              onSuccess={() => setVisibleShowDrawer(false)}
+            />
+          }
+        >
+          <Title level={5}>Id</Title>
+          <Text>{record?.id}</Text>
+
+          <Title level={5}>Status</Title>
+          <Text>{record?.created_at}</Text>
+
+          <Title level={5}>Title</Title>
+          <Text>{record?.title}</Text>
+        </Show>
+      </Drawer>
+    </>
+  );
 };

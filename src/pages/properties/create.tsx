@@ -1,5 +1,4 @@
 import { Create, useForm, useSelect } from "@refinedev/antd";
-import MDEditor from "@uiw/react-md-editor";
 import { Form, Input, Select } from "antd";
 
 export const PropertyCreate = () => {
@@ -12,9 +11,10 @@ export const PropertyCreate = () => {
   return (
     <Create saveButtonProps={saveButtonProps}>
       <Form {...formProps} layout="vertical">
+
         <Form.Item
-          label={"Title"}
-          name={["title"]}
+          label={"Property Name"}
+          name={["property_name"]}
           rules={[
             {
               required: true,
@@ -23,39 +23,67 @@ export const PropertyCreate = () => {
         >
           <Input />
         </Form.Item>
+
         <Form.Item
-          label={"Content"}
-          name="content"
+          label={"Address"}
+          name={["address"]}
           rules={[
             {
-              required: true,
+              required: false,
             },
           ]}
         >
-          <MDEditor data-color-mode="light" />
+          <Input />
         </Form.Item>
+
+        <Form.Item
+          label={"City"}
+          name={["city"]}
+          rules={[
+            {
+              required: false,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label={"State"}
+          name={["state"]}
+          rules={[
+            {
+              required: false,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label={"Zip Code"}
+          name={["zip_code"]}
+          rules={[
+            {
+              required: false,
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
         <Form.Item
           label={"Property"}
           name={"propertyId"}
           rules={[
             {
-              required: true,
+              required: false,
             },
           ]}
         >
           <Select {...propertySelectProps} />
         </Form.Item>
-        <Form.Item
-          label={"Status"}
-          name={["status"]}
-          initialValue={"draft"}
-          rules={[
-            {
-              required: true,
-            },
-          ]}
-        >
-        </Form.Item>
+
       </Form>
     </Create>
   );

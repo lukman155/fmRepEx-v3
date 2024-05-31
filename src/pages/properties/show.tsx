@@ -10,10 +10,10 @@ import { Typography } from "antd";
 
 const { Title } = Typography;
 
-export const BlogPostShow = () => {
+export const PropertyShow = () => {
   const { queryResult } = useShow({
     meta: {
-      select: "*, categories(id,title)",
+      select: "*, properties(id,name)",
     },
   });
   const { data, isLoading } = queryResult;
@@ -21,8 +21,8 @@ export const BlogPostShow = () => {
   const record = data?.data;
 
   const { data: categoryData, isLoading: categoryIsLoading } = useOne({
-    resource: "categories",
-    id: record?.categories?.id || "",
+    resource: "Properties",
+    id: record?.properties?.id || "",
     queryOptions: {
       enabled: !!record,
     },
@@ -32,7 +32,7 @@ export const BlogPostShow = () => {
     <Show isLoading={isLoading}>
       <Title level={5}>{"ID"}</Title>
       <NumberField value={record?.id ?? ""} />
-      <Title level={5}>{"Title"}</Title>
+      <Title level={5}>{"Name"}</Title>
       <TextField value={record?.title} />
       <Title level={5}>{"Content"}</Title>
       <MarkdownField value={record?.content} />

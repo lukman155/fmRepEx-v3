@@ -1,70 +1,132 @@
 import {
   DateField,
-  DeleteButton,
-  EditButton,
-  List,
-  ShowButton,
-  useTable,
+  useSimpleList,
+  useModalForm,
+  Show,
+  CreateButton,
 } from "@refinedev/antd";
-import { BaseRecord, useMany } from "@refinedev/core";
-import { Space, Table, Typography } from "antd";
+
+import { Avatar,
+          Card, 
+          Skeleton, 
+          Space,  
+          Typography,
+          List,
+          Flex,
+          Grid,
+} from "antd";
+
+import { EditOutlined, EyeOutlined } from '@ant-design/icons';
+
+
+import { Property } from "../../types";
+import { useState } from "react";
+import { useShow } from "@refinedev/core";
+import { Link } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
 export const PropertyList = () => {
-  const { tableProps } = useTable({
-    syncWithLocation: true,
-    meta: {
-      select: "*, properties(id,title)",
+  const { listProps, queryResult: simpleListQueryResult } = useSimpleList<Property>({
+    resource: "properties",
+    pagination: {
+      pageSize: 12,
+    },
+    sorters: {
+      initial: [
+        {
+          field: "created_at",
+          order: "desc",
+        },
+      ],
     },
   });
 
-  const { data: propertyData, isLoading: propertyIsLoading } = useMany({
-    resource: "properties",
-    ids:
-      tableProps?.dataSource
-        ?.map((item) => item?.properties?.id)
-        .filter(Boolean) ?? [],
-    queryOptions: {
-      enabled: !!tableProps?.dataSource,
-    },
+  const {
+    modalProps: createModalProps,
+    formProps: createFormProps,
+    show: createModalShow,
+    formLoading: createFormLoading,
+  } = useModalForm<Property>({
+    action: "create",
+    syncWithLocation: true,
   });
+
+  // Edit Modal
+  const {
+    modalProps: editModalProps,
+    formProps: editFormProps,
+    show: editModalShow,
+    formLoading: editFormLoading,
+  } = useModalForm<Property>({
+    action: "edit",
+    syncWithLocation: true,
+  });
+
+  // Show Modal
+  const [visibleShowModal, setVisibleShowModal] = useState<boolean>(false);
+
+  const { queryResult, setShowId } = useShow<Property>();
+
+  const { data: showQueryResult } = queryResult;
+  const record = showQueryResult?.data;
+
+  const { isLoading } = simpleListQueryResult;
+
+  const renderItem = (item: Property) => {
+    const { id, name, address, created_at } = item;
+    const { Meta } = Card;
+  
+    return (
+
+      <Link to={`show/${id}`} style={{ width: 300 }}>
+        <Card hoverable key={id}
+          style={{ width: 300 }}
+          cover={
+            <img
+              alt="example"
+              src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+            />
+          }
+          
+        >
+          <Meta
+            avatar={<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />}
+            title={name}
+            description={address}
+          />
+        </Card>
+        </Link>
+    );
+  };
 
   return (
-    <List>
-      <Table {...tableProps} rowKey="id">
-        <Table.Column dataIndex="id" title={"ID"} />
-        <Table.Column
-          dataIndex={"properties"}
-          title={"Property"}
-          render={(value) =>
-            propertyIsLoading ? (
-              <>Loading...</>
-            ) : (
-              propertyData?.data?.find((item) => item.id === value?.id)?.title
-            )
-          }
-        />
-        <Table.Column dataIndex="address" title={"Address"} />
-        <Table.Column dataIndex="city" title={"City"} />
-        <Table.Column dataIndex="state" title={"State"} />
-        <Table.Column
-          dataIndex={["createdAt"]}
-          title={"Created at"}
-          render={(value: any) => <DateField value={value} />}
-        />
-        <Table.Column
-          title={"Actions"}
-          dataIndex="actions"
-          render={(_, record: BaseRecord) => (
-            <Space>
-              <EditButton hideText size="small" recordItemId={record.id} />
-              <ShowButton hideText size="small" recordItemId={record.id} />
-              <DeleteButton hideText size="small" recordItemId={record.id} />
-            </Space>
+        <Flex vertical>
+
+          {isLoading ? (
+            <div className="canvas-skeleton-list">
+              {[...Array(12)].map((_, index) => (
+                <Skeleton key={index} paragraph={{ rows: 8 }} />
+              ))}
+            </div>
+          ) : (
+            
+            <Show title={'Announcements'} headerButtons={<CreateButton />}>
+            <List
+            {...listProps}
+            renderItem={renderItem}
+            pagination={{ position: 'bottom',
+            align: 'center',}}
+            grid={{
+              gutter: 16,
+              xs: 1,
+              sm: 2,
+              md: 2,
+            }}
+          />
+          </Show>
           )}
-        />
-      </Table>
-    </List>
+          </Flex>
+
   );
 };

@@ -1,40 +1,89 @@
-import { useParsed } from '@refinedev/core';
-import { Badge, Descriptions } from 'antd';
-import type { DescriptionsProps } from 'antd';
+import {
+  DateField,
+  useSimpleList,
+  useModalForm,
+  Show,
+  CreateButton,
+} from "@refinedev/antd";
 
-// import { Announcement } from "../../types";
+import { Avatar,
+          Card, 
+          Skeleton, 
+          Space,  
+          Typography,
+          List,
+          Flex,
+          Grid,
+          
+} from "antd";
 
-export const AnnouncementShow: React.FC = () => {
-  const { pathname } = useParsed();
-  const items: DescriptionsProps['items'] = [
-    {
-      key: '1',
-      label: 'UserName',
-      children: 'Zhou Maomao',
+import { EditOutlined, EyeOutlined } from '@ant-design/icons';
+
+
+import { Property } from "../../types";
+import { useState } from "react";
+import { HttpError, useList, useShow } from "@refinedev/core";
+import { Link } from "react-router-dom";
+
+const { Title, Text } = Typography;
+
+export const PropertyList = () => {
+  const { listProps, queryResult: simpleListQueryResult } = useSimpleList<Property>({
+    resource: "properties",
+    pagination: {
+      pageSize: 12,
     },
-    {
-      key: '2',
-      label: 'Telephone',
-      children: '1810000000',
+    sorters: {
+      initial: [
+        {
+          field: "created_at",
+          order: "desc",
+        },
+      ],
     },
-    {
-      key: '3',
-      label: 'Live',
-      children: 'Hangzhou, Zhejiang',
-    },
-    {
-      key: '4',
-      label: 'Address',
-      span: 2,
-      children: 'No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China',
-    },
-    {
-      key: '5',
-      label: 'Remark',
-      children: 'empty',
-    },
-  ];
-  
-  return ( <Descriptions title="" layout="vertical" items={items} />)
-}
-  
+  });
+
+  const { data, isLoading, isError } = useList<Property, HttpError>({
+    resource: "properties",
+  });
+
+  const properties = data?.data ?? [];
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Something went wrong!</div>;
+  }
+
+  return (
+        <Flex vertical>
+          {isLoading ? (
+            <div className="canvas-skeleton-list">
+              {[...Array(12)].map((_, index) => (
+                <Skeleton key={index} paragraph={{ rows: 8 }} />
+              ))}
+            </div>
+          ) : (
+            <Show title={'Announcements'} headerButtons={<CreateButton />}>
+            {properties.map((pro) => (
+              <Link style={{ width: 300, display:'block' }} to={`show/${pro.id}`}>
+                <Card hoverable key={pro.id}
+                  style={{ width: 300 }}
+                  cover={
+                    <img
+                      alt="example"
+                      src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                    />
+                  }                  
+                >
+                </Card>
+              </Link>
+            ))}
+          </Show>
+          )}
+          </Flex>
+
+  );
+};

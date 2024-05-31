@@ -26,6 +26,7 @@ import { ColorModeContextProvider } from "./contexts/color-mode";
 import {
   PropertyCreate,
   PropertyList,
+  PropertyShow,
 
 } from "./pages/properties";
 import {
@@ -40,7 +41,6 @@ import { supabaseClient } from "./utility";
 function App() {
   return (
     <BrowserRouter>
-      <GitHubBanner />
       <RefineKbarProvider>
         <ColorModeContextProvider>
           <AntdApp>
@@ -103,6 +103,7 @@ function App() {
                     <Route path="/properties">
                       <Route index element={<PropertyList />} />
                       <Route path="create" element={<PropertyCreate />} />
+                      <Route path="show/:id" element={<PropertyShow />} />
                     {/* <Route path="edit/:id" element={<BlogPostEdit />} />
                       <Route path="show/:id" element={<BlogPostShow />} /> */}
                     </Route>
