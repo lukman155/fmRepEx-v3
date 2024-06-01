@@ -110,7 +110,7 @@ function App() {
                       <Route index element={<AnnouncementList />} />
                       <Route path="create" element={<AnnouncementCreate />} />
                       <Route path="edit/:id" element={<AnnouncementEdit />} />
-                      <Route path="show/:id" element={<AnnouncementShow />} /> 
+                      {/* <Route path="show/:id" element={<AnnouncementShow />} />  */}
                     </Route>
                     <Route path="*" element={<ErrorComponent />} />
                   </Route>
