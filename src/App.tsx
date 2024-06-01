@@ -22,7 +22,7 @@ import { App as AntdApp } from "antd";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import authProvider from "./authProvider";
 import { Header } from "./components/header";
-import { ColorModeContextProvider } from "./contexts/color-mode";
+// import { ColorModeContextProvider } from "./contexts/color-mode";
 import {
   PropertyCreate,
   PropertyList,
