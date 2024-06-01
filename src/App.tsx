@@ -33,7 +33,6 @@ import {
   AnnouncementCreate,
   AnnouncementEdit,
   AnnouncementList,
-  AnnouncementShow,
 
 } from "./pages/announcements";
 import { supabaseClient } from "./utility";
