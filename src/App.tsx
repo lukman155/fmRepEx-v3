@@ -41,7 +41,7 @@ function App() {
   return (
     <BrowserRouter>
       <RefineKbarProvider>
-        <ColorModeContextProvider>
+        {/* <ColorModeContextProvider> */}
           <AntdApp>
             <DevtoolsProvider>
               <Refine
@@ -156,7 +156,7 @@ function App() {
               <DevtoolsPanel />
             </DevtoolsProvider>
           </AntdApp>
-        </ColorModeContextProvider>
+        {/* </ColorModeContextProvider> */}
       </RefineKbarProvider>
     </BrowserRouter>
   );
